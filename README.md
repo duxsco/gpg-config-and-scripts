@@ -1,6 +1,6 @@
 # My GnuPG configuration and some helper scripts
 
-Everything in this Git repo has been tested with GnuPG 2.2.x (LTS). Certain config options are invalid in GnuPG 2.3.x (stable) and defaults might differ!
+⚠️ Everything in this Git repo has been **tested only with GnuPG 2.2.x (LTS)**. Certain config options are invalid in GnuPG 2.3.x (stable) and defaults might differ!
 
 ## Understand the GnuPG configuration
 
