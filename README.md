@@ -38,8 +38,8 @@ bash bin/man.sh -c /path/to/gpg.conf
 # print full manpage with config file options highlighted red
 bash bin/man.sh -c gpg.conf -f
 
-# If "less" doesn't show any colors, use the "-r" (--raw-control-chars) flag
-bash bin/man.sh -c gpg.conf -f | less -r
+# If "less" doesn't show any colors, use the "-R" (--RAW-CONTROL-CHARS) flag
+bash bin/man.sh -c gpg.conf -f | less -R
 ```
 
 ## List public keys and delete untrusted ones
