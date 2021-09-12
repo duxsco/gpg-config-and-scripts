@@ -53,7 +53,7 @@ case "${#SUCCESS[@]}" in
             echo -e "Public key retrieval aborted!\n"
         else
             ((CHOICE--))
-            echo -e "Mechanism ${SUCCESS[${CHOICE}]} chosen...\n"
+            echo -e "Mechanism \"${SUCCESS[${CHOICE}]}\" chosen...\n"
             gpg  --locate-keys --auto-key-locate "clear,nodefault,${SUCCESS[${CHOICE}]}" "$1"
         fi
         ;;
