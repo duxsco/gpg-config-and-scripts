@@ -2,7 +2,10 @@
 
 ## System requirements
 
-⚠️ Everything in this Git repo has been **tested only with GnuPG 2.2.x (LTS)**. Certain config options are invalid in GnuPG 2.3.x (stable) and defaults might differ!
+If you intend to use GnuPG 2.3.x (stable) instead of GnuPG 2.2.x (LTS) make the following changes in `gpg.conf`:
+
+- Remove obsolete "no-honor-pka-record" from "keyserver-options"
+- Uncomment the line containing "force-aead"
 
 Otherwise, the scripts in `bin/` should work out of the box on common Linux systems.
 
