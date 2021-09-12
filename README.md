@@ -1,10 +1,10 @@
 # My GnuPG configuration and some helper scripts
 
-⚠️ Everything in this Git repo has been **tested only with GnuPG 2.2.x (LTS)**. Certain config options are invalid in GnuPG 2.3.x (stable) and defaults might differ!
-
 ## System requirements
 
-On common Linux systems, the scripts in `bin/` should work out of the box.
+⚠️ Everything in this Git repo has been **tested only with GnuPG 2.2.x (LTS)**. Certain config options are invalid in GnuPG 2.3.x (stable) and defaults might differ!
+
+Otherwise, the scripts in `bin/` should work out of the box on common Linux systems.
 
 MacOS, however, needs these [HomeBrew](https://brew.sh) packages installed:
 
