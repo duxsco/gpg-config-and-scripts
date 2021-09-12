@@ -38,7 +38,7 @@ bash bin/man.sh -c /path/to/gpg.conf
 # print full manpage with config file options highlighted red
 bash bin/man.sh -c gpg.conf -f
 
-# If "less" doesn't to show any colors, use the "-r" (--raw-control-chars) flag
+# If "less" doesn't show any colors, use the "-r" (--raw-control-chars) flag
 bash bin/man.sh -c gpg.conf -f | less -r
 ```
 
