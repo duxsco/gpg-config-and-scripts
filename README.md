@@ -2,6 +2,15 @@
 
 ⚠️ Everything in this Git repo has been **tested only with GnuPG 2.2.x (LTS)**. Certain config options are invalid in GnuPG 2.3.x (stable) and defaults might differ!
 
+## System requirements
+
+On common Linux systems, the scripts in `bin/` should work out of the box.
+
+MacOS, however, needs these [HomeBrew](https://brew.sh) packages installed:
+
+- `findutils`
+- `gnu-sed`
+
 ## Understand the GnuPG configuration
 
 You need to comment out `default-key` in `gpg.conf` OR set the ID of one of your secret keys.
@@ -25,6 +34,9 @@ bash bin/man.sh -c /path/to/gpg.conf
 
 # print full manpage with config file options highlighted red
 bash bin/man.sh -c gpg.conf -f
+
+# If "less" doesn't to show any colors, use the "-r" (--raw-control-chars) flag
+bash bin/man.sh -c gpg.conf -f | less -r
 ```
 
 ## List public keys and delete untrusted ones

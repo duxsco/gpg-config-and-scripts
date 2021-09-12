@@ -10,11 +10,17 @@ COLOR["q"]='\e[0;1;97;105m'
 COLOR["-|e|n|r|\?"]='\e[0;1;97;101m'
 COLOR_OFF="\e[0m"
 
+if [ "$(uname -s)" == "Darwin" ]; then
+    XARGS="gxargs"
+else
+    XARGS="xargs"
+fi
+
 deleteUntrustedPublicKeys() {
     gpg --list-keys --with-colons | \
         grep -E "^pub:(-|e|n|r|\?)" | \
         cut -d: -f5 | \
-        xargs --no-run-if-empty gpg --delete-keys
+        ${XARGS} --no-run-if-empty gpg --delete-keys
 }
 
 help() {
@@ -48,7 +54,7 @@ listPublicKeys() {
     for TRUST_LEVEL in "u" "f" "m" "q" "-|e|n|r|\?"; do
         ( grep -E "^pub:(${TRUST_LEVEL}):" <<< "${PUBLIC_KEYS}" || true ) | \
             cut -d: -f5 | \
-            xargs --no-run-if-empty gpg --list-options show-unusable-uids,show-sig-expire --list-keys | \
+            ${XARGS} --no-run-if-empty gpg --list-options show-unusable-uids,show-sig-expire --list-keys | \
             sed -E "s/^(uid[[:space:]]*)( \[.*\] )(.*)/\1$(printf "${COLOR[${TRUST_LEVEL}]}%s${COLOR_OFF}" "\2")\3/"
     done
 }

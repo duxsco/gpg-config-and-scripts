@@ -9,6 +9,12 @@ COLOR_RED='\e[0;1;97;101m'
 COLOR_YELLOW='\e[0;1;30;103m'
 COLOR_OFF='\e[0m'
 
+if [ "$(uname -s)" == "Darwin" ]; then
+    SED="gsed"
+else
+    SED="sed"
+fi
+
 help() {
     echo -e "
 Execute:
@@ -22,6 +28,10 @@ The word \"default\" is highlighted ${COLOR_YELLOW}yellow${COLOR_OFF}.
 "
 
 return 1
+}
+
+myMan() {
+    man -P "cat -v" "$1" | ${SED} 's/\(.\)\^H\(.\)/\2/g'
 }
 
 while getopts c:fh opt; do
@@ -45,22 +55,22 @@ SED_REGEX="$(
         paste -d '|' -s -
 )"
 # shellcheck disable=SC2001
-GNUPG_COMMAND="$(sed 's/\.conf$//' <<<"${GNUPG_CONFIG_FILE##*/}")"
+GNUPG_COMMAND="$(${SED} 's/\.conf$//' <<<"${GNUPG_CONFIG_FILE##*/}")"
 INDENTATION="$(
-    man "${GNUPG_COMMAND}" | \
-        sed -n "/^OPTIONS/,/^[[:upper:]]/p" | \
+    myMan "${GNUPG_COMMAND}" | \
+        ${SED} -n "/^OPTIONS/,/^[[:upper:]]/p" | \
         grep "^[[:space:]]*--" | \
         sort | tail -n 1 | \
         awk -F"--" '{print $1}'
 )"
 
 if [ -z ${PRINT_FULL_GNUPG_MANPAGE+x} ]; then
-    man "${GNUPG_COMMAND}" | \
-        sed -n -E "/^${INDENTATION}--(${SED_REGEX})($| )/,/^$/p" | \
-        sed -E "s/([^-])(default)([^-])/\1$(printf "${COLOR_YELLOW}%s${COLOR_OFF}" "\2")\3/gi"
+    myMan "${GNUPG_COMMAND}" | \
+        ${SED} -n -E "/^${INDENTATION}--(${SED_REGEX})($| )/,/^$/p" | \
+        ${SED} -E "s/([^-])(default)([^-])/\1$(printf "${COLOR_YELLOW}%s${COLOR_OFF}" "\2")\3/gi"
 else
-    man "${GNUPG_COMMAND}" | \
-        sed -n '/^OPTIONS/,/^[[:upper:]]/p' | \
-        sed -E "s/^(${INDENTATION}--)(${SED_REGEX})($| )(.*)/\1$(printf "${COLOR_RED}%s${COLOR_OFF}" "\2")\3\4/g" | \
-        sed -E "s/([^-])(default)([^-])/\1$(printf "${COLOR_YELLOW}%s${COLOR_OFF}" "\2")\3/gi"
+    myMan "${GNUPG_COMMAND}" | \
+        ${SED} -n '/^OPTIONS/,/^[[:upper:]]/p' | \
+        ${SED} -E "s/^(${INDENTATION}--)(${SED_REGEX})($| )(.*)/\1$(printf "${COLOR_RED}%s${COLOR_OFF}" "\2")\3\4/g" | \
+        ${SED} -E "s/([^-])(default)([^-])/\1$(printf "${COLOR_YELLOW}%s${COLOR_OFF}" "\2")\3/gi"
 fi

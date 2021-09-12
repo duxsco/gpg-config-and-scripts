@@ -20,11 +20,20 @@ declare -a FAIL
 declare -a SUCCESS
 TEMP_GPG_HOMEDIR="$(mktemp -d)"
 
-for MECHANISM in "dane" "wkd" "pka" "cert" "hkps://keys.openpgp.org" "hkps://keys.mailvelope.com" "hkps://keyserver.ubuntu.com"; do
-    gpg --homedir "${TEMP_GPG_HOMEDIR}" --locate-keys --auto-key-locate "clear,nodefault,${MECHANISM}" "$1" >/dev/null 2>&1 && \
-    SUCCESS+=("${MECHANISM}") || \
-    FAIL+=("${MECHANISM}")
-done
+# if e-mail...
+if grep -q "@" <<<"$1"; then
+    for MECHANISM in "dane" "wkd" "pka" "cert" "hkps://keys.openpgp.org" "hkps://keys.mailvelope.com" "hkps://keys.gentoo.org" "hkps://keyserver.ubuntu.com"; do
+        gpg --homedir "${TEMP_GPG_HOMEDIR}" --locate-keys --auto-key-locate "clear,nodefault,${MECHANISM}" "$1" >/dev/null 2>&1 && \
+        SUCCESS+=("${MECHANISM}") || \
+        FAIL+=("${MECHANISM}")
+    done
+else
+    for KEYSERVER in "hkps://keys.openpgp.org" "hkps://keys.mailvelope.com" "hkps://keys.gentoo.org" "hkps://keyserver.ubuntu.com"; do
+        gpg --homedir "${TEMP_GPG_HOMEDIR}" --keyserver "${KEYSERVER}" --recv-keys "$1" >/dev/null 2>&1 && \
+        SUCCESS+=("${KEYSERVER}") || \
+        FAIL+=("${KEYSERVER}")
+    done
+fi
 
 gpgconf --homedir "${TEMP_GPG_HOMEDIR}" --kill all
 
