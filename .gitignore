@@ -1,0 +1,9 @@
+.#lk0x*
+crls.d/
+pubring.kbx
+pubring.kbx~
+random_seed
+trustdb.gpg
+openpgp-revocs.d/
+private-keys-v1.d/
+reader_0.status
