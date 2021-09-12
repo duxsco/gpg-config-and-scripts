@@ -12,7 +12,7 @@ To print personal key IDs in `long` format:
 gpg --list-options show-only-fpr-mbox --list-secret-keys
 ```
 
-To better understand GnuPG config options. The word "default" is highlighted yellow:
+To better understand GnuPG config options:
 
 ```bash
 # print man.sh help
@@ -27,7 +27,7 @@ bash bin/man.sh -c gpg.conf -f
 
 ## List public keys and delete untrusted ones
 
-To list public keys color and grouped by following trust levels from top to bottom:
+To list public keys colored and grouped by following trust levels from top to bottom:
 
 - `ultimate`
 - `full`
