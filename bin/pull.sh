@@ -29,7 +29,7 @@ fi
 # if e-mail...
 if grep -q "@" <<<"$1"; then
     for MECHANISM in "dane" "wkd" ${PKA} "cert" "hkps://keys.openpgp.org" "hkps://keys.mailvelope.com" "hkps://keys.gentoo.org" "hkps://keyserver.ubuntu.com"; do
-        gpg --homedir "${TEMP_GPG_HOMEDIR}" --locate-keys --auto-key-locate "clear,nodefault,${MECHANISM}" "$1" >/dev/null 2>&1 && \
+        gpg --homedir "${TEMP_GPG_HOMEDIR}" --auto-key-locate "clear,${MECHANISM}" --locate-external-key "$1" >/dev/null 2>&1 && \
         SUCCESS+=("${MECHANISM}") || \
         FAIL+=("${MECHANISM}")
     done
@@ -69,7 +69,7 @@ case "${#SUCCESS[@]}" in
         else
             ((CHOICE--))
             echo -e "Mechanism \"${SUCCESS[${CHOICE}]}\" chosen...\n"
-            gpg  --locate-keys --auto-key-locate "clear,nodefault,${SUCCESS[${CHOICE}]}" "$1"
+            gpg --auto-key-locate "clear,${SUCCESS[${CHOICE}]}" --locate-external-key "$1"
         fi
         ;;
 esac
