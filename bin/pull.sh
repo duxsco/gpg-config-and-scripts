@@ -69,7 +69,12 @@ case "${#SUCCESS[@]}" in
         else
             ((CHOICE--))
             echo -e "Mechanism \"${SUCCESS[${CHOICE}]}\" chosen...\n"
-            gpg --auto-key-locate "clear,${SUCCESS[${CHOICE}]}" --locate-external-key "$1"
+
+            if grep -q "@" <<<"$1"; then
+                gpg --auto-key-locate "clear,${SUCCESS[${CHOICE}]}" --locate-external-key "$1"
+            else
+                gpg --keyserver "${SUCCESS[${CHOICE}]}" --recv-keys "$1"
+            fi
         fi
         ;;
 esac
