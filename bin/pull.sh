@@ -16,7 +16,6 @@ EOF
     exit 1
 fi
 
-declare -a FAIL
 declare -a SUCCESS
 TEMP_GPG_HOMEDIR="$(mktemp -d)"
 
@@ -30,14 +29,12 @@ fi
 if grep -q "@" <<<"$1"; then
     for MECHANISM in "dane" "wkd" ${PKA} "cert" "hkps://keys.openpgp.org" "hkps://keys.mailvelope.com" "hkps://keys.gentoo.org" "hkps://keyserver.ubuntu.com"; do
         gpg --homedir "${TEMP_GPG_HOMEDIR}" --auto-key-locate "clear,${MECHANISM}" --locate-external-key "$1" >/dev/null 2>&1 && \
-        SUCCESS+=("${MECHANISM}") || \
-        FAIL+=("${MECHANISM}")
+        SUCCESS+=("${MECHANISM}")
     done
 else
     for KEYSERVER in "hkps://keys.openpgp.org" "hkps://keys.mailvelope.com" "hkps://keys.gentoo.org" "hkps://keyserver.ubuntu.com"; do
         gpg --homedir "${TEMP_GPG_HOMEDIR}" --keyserver "${KEYSERVER}" --recv-keys "$1" >/dev/null 2>&1 && \
-        SUCCESS+=("${KEYSERVER}") || \
-        FAIL+=("${KEYSERVER}")
+        SUCCESS+=("${KEYSERVER}")
     done
 fi
 
