@@ -44,38 +44,36 @@ fi
 
 gpgconf --homedir "${TEMP_GPG_HOMEDIR}" --kill all
 
-case "${#SUCCESS[@]}" in
-    0)
-        echo -e "\nNo working mechanism found! Aborting...\n";;
-    *)
-        echo -e "\nFollowing mechanism(s) are working for public key retrieval.\nWhat do you want to use?\n  0) Abort/Quit"
+if [ -z ${SUCCESS+x} ] || [[ ${#SUCCESS[@]} -eq 0 ]]; then
+    echo -e "\nNo working mechanism found! Aborting...\n"
+else
+    echo -e "\nFollowing mechanism(s) are working for public key retrieval.\nWhat do you want to use?\n  0) Abort/Quit"
 
-        for INDEX in "${!SUCCESS[@]}"; do
-            echo "  $((INDEX+1))) ${SUCCESS[${INDEX}]}"
-        done
+    for INDEX in "${!SUCCESS[@]}"; do
+        echo "  $((INDEX+1))) ${SUCCESS[${INDEX}]}"
+    done
 
-        echo ""
-        read -r -p "Please, select by number: " CHOICE
-        echo ""
+    echo ""
+    read -r -p "Please, select by number: " CHOICE
+    echo ""
 
 
-        NUMBER_REGEX='^[0-9]+$'
-        if ! [[ ${CHOICE} =~ ${NUMBER_REGEX} ]] || [[ ${CHOICE} -gt ${#SUCCESS[@]} ]]; then
-            echo -e "Invalid choice! Aborting...\n"
-            exit 1
-        fi
+    NUMBER_REGEX='^[0-9]+$'
+    if ! [[ ${CHOICE} =~ ${NUMBER_REGEX} ]] || [[ ${CHOICE} -gt ${#SUCCESS[@]} ]]; then
+        echo -e "Invalid choice! Aborting...\n"
+        exit 1
+    fi
 
-        if [[ ${CHOICE} -eq 0 ]]; then
-            echo -e "Public key retrieval aborted!\n"
+    if [[ ${CHOICE} -eq 0 ]]; then
+        echo -e "Public key retrieval aborted!\n"
+    else
+        ((CHOICE--))
+        echo -e "Mechanism \"${SUCCESS[${CHOICE}]}\" chosen...\n"
+
+        if grep -q "@" <<<"$1"; then
+            gpg --auto-key-locate "clear,${SUCCESS[${CHOICE}]}" --locate-external-key "$1"
         else
-            ((CHOICE--))
-            echo -e "Mechanism \"${SUCCESS[${CHOICE}]}\" chosen...\n"
-
-            if grep -q "@" <<<"$1"; then
-                gpg --auto-key-locate "clear,${SUCCESS[${CHOICE}]}" --locate-external-key "$1"
-            else
-                gpg --keyserver "${SUCCESS[${CHOICE}]}" --recv-keys "$1"
-            fi
+            gpg --keyserver "${SUCCESS[${CHOICE}]}" --recv-keys "$1"
         fi
-        ;;
-esac
+    fi
+fi
