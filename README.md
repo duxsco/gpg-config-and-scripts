@@ -14,17 +14,15 @@ MacOS, however, needs these [HomeBrew](https://brew.sh) packages installed:
 - `findutils`
 - `gnu-sed`
 
-## Understand the GnuPG configuration
-
-You need to comment out `default-key` in `gpg.conf` OR set the ID of one of your secret keys.
-
-- To print personal key IDs in `long` format:
+You need to comment out `default-key` in `gpg.conf` OR set the ID of one of your secret keys. To print personal key IDs in `long` format:
 
 ```bash
 gpg --list-options show-only-fpr-mbox --list-secret-keys
 ```
 
-- To better understand GnuPG config options:
+## Understand the GnuPG configuration
+
+To better understand GnuPG config options you can use ([man.sh](https://github.com/duxco/gpg-config-and-scripts/blob/main/bin/man.sh)) to display man pages while highlighting defaults (in yellow) and options that have been set in the configuration file (in red).
 
 ![man.sh](assets/man.png)
 
@@ -32,6 +30,8 @@ gpg --list-options show-only-fpr-mbox --list-secret-keys
 # print man.sh help
 bash bin/man.sh
 
+# print manpage docs only on the options you have set
+#
 # bash bin/man.sh -c dirmngr.conf|gpg-agent.conf|gpg.conf|scdaemon.conf|orAnyOtherGpgConf [-f]
 bash bin/man.sh -c /path/to/gpg.conf
 
