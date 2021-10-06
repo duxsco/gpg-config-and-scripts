@@ -19,7 +19,7 @@ fi
 declare -a SUCCESS
 TEMP_GPG_HOMEDIR="$(mktemp -d)"
 
-if grep -q '^gpg (GnuPG) 2\.2\.' < <(gpg --version); then
+if grep -q '^gpg (GnuPG) 2\.2\.' < <(gpg --homedir "${TEMP_GPG_HOMEDIR}" --version); then
     PKA="pka"
 else
     PKA=""
