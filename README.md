@@ -11,7 +11,9 @@ Otherwise, the scripts in `bin/` should work out of the box on common Linux syst
 
 MacOS, however, needs these [HomeBrew](https://brew.sh) packages installed:
 
+- `bash`
 - `findutils`
+- `gnupg` or `gnupg@2.2`
 - `gnu-sed`
 
 You need to comment out `default-key` in `gpg.conf` OR set the ID of one of your secret keys. To print personal key IDs in `long` format:
