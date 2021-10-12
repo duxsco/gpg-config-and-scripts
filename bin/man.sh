@@ -15,10 +15,9 @@ fi
 help() {
     echo -e "
 Execute:
-  $ bash ${0##*/} -c /path/to/gnupg/config/file.conf [-f]
+  $ bash ${0##*/} /path/to/gnupg/config/file.conf
 
-Optional flag \"-f\" outputs the complete \"OPTIONS\" section of the manpage.
-
+The complete \"OPTIONS\" section of the manpage is printed out.
 Options which have been set in the selected config file
 are highlighted ${COLOR_RED}red${COLOR_OFF}.
 The word \"default\" is highlighted ${COLOR_YELLOW}yellow${COLOR_OFF}.

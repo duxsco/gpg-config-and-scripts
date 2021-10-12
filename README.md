@@ -32,16 +32,12 @@ To better understand GnuPG config options you can use ([man.sh](https://github.c
 # print man.sh help
 bash bin/man.sh
 
-# print manpage docs only on the options you have set
-#
-# bash bin/man.sh -c dirmngr.conf|gpg-agent.conf|gpg.conf|scdaemon.conf|orAnyOtherGpgConf [-f]
-bash bin/man.sh -c /path/to/gpg.conf
-
-# print full manpage with config file options highlighted red
-bash bin/man.sh -c gpg.conf -f
+# print "OPTIONS" section of the manpage while
+# highlighting options set in the .conf red and "default" in yellow
+bash bin/man.sh gpg.conf
 
 # If "less" doesn't show any colors, use the "-R" (--RAW-CONTROL-CHARS) flag
-bash bin/man.sh -c gpg.conf -f | less -R
+bash bin/man.sh ~/.gnupg/gpg.conf | less -R
 ```
 
 ## List public keys and delete untrusted ones
