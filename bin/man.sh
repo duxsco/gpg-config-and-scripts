@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-unset PRINT_FULL_GNUPG_MANPAGE
 unset GNUPG_CONFIG_FILE
 
 COLOR_RED='\e[0;1;97;101m'
@@ -38,8 +37,6 @@ while getopts c:fh opt; do
     case $opt in
         c)
             GNUPG_CONFIG_FILE="${OPTARG}";;
-        f)
-            PRINT_FULL_GNUPG_MANPAGE="true";;
         h|*)
             help;;
    esac
@@ -64,14 +61,8 @@ INDENTATION="$(
         awk -F"--" '{print $1}'
 )"
 
-if [ -z ${PRINT_FULL_GNUPG_MANPAGE+x} ]; then
-    myMan "${GNUPG_COMMAND}" | \
-        ${SED} -n -E "/^${INDENTATION}--(${SED_REGEX})($| )/,/^$/p" | \
-        ${SED} -E "s/([^-])(default)([^-])/\1$(printf "${COLOR_YELLOW}%s${COLOR_OFF}" "\2")\3/gi"
-else
-    myMan "${GNUPG_COMMAND}" | \
-        ${SED} -n '/^OPTIONS/,/^[[:upper:]]/p' | \
-        head -n-1 | \
-        ${SED} -E "s/^(${INDENTATION}--)(${SED_REGEX})($| )(.*)/\1$(printf "${COLOR_RED}%s${COLOR_OFF}" "\2")\3\4/g" | \
-        ${SED} -E "s/([^-])(default)([^-])/\1$(printf "${COLOR_YELLOW}%s${COLOR_OFF}" "\2")\3/gi"
-fi
+myMan "${GNUPG_COMMAND}" | \
+    ${SED} -n '/^OPTIONS/,/^[[:upper:]]/p' | \
+    head -n-1 | \
+    ${SED} -E "s/^(${INDENTATION}--)(${SED_REGEX})($| )(.*)/\1$(printf "${COLOR_RED}%s${COLOR_OFF}" "\2")\3\4/g" | \
+    ${SED} -E "s/([^-])(default)([^-])/\1$(printf "${COLOR_YELLOW}%s${COLOR_OFF}" "\2")\3/gi"
