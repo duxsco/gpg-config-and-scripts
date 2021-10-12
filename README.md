@@ -24,7 +24,7 @@ gpg --list-options show-only-fpr-mbox --list-secret-keys
 
 ## Understand the GnuPG configuration
 
-To better understand GnuPG config options you can use ([man.sh](https://github.com/duxco/gpg-config-and-scripts/blob/main/bin/man.sh)) to display man pages while highlighting defaults (in yellow) and options that have been set in the configuration file (in red).
+To better understand GnuPG config options you can use [man.sh](bin/man.sh) to display man pages while highlighting defaults (in yellow) and options that have been set in the configuration file (in red).
 
 ![man.sh](assets/man.png)
 
@@ -42,7 +42,7 @@ bash bin/man.sh ~/.gnupg/gpg.conf | less -R
 
 ## List public keys and delete untrusted ones
 
-Public keys are listed from top to bottom, colored and grouped by following trust levels:
+With [pubkey.sh](bin/pubkey.sh), public keys are listed from top to bottom, colored and grouped by following trust levels:
 
 1. `ultimate`
 2. `full`
@@ -68,7 +68,7 @@ bash bin/pubkey.sh -d
 
 ## Pull public keys
 
-GnuPG offers multiple mechanism to pull a public key. Following script tries out a predefined list of mechanism and lets you choose one of them for pulling the public key:
+GnuPG offers multiple mechanism to pull a public key. [pull.sh](bin/pull.sh) tries out a predefined list of mechanism and lets you choose one of them for pulling the public key:
 
 ![man.sh](assets/pull.png)
 
