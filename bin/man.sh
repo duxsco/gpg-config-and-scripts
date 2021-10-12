@@ -71,6 +71,7 @@ if [ -z ${PRINT_FULL_GNUPG_MANPAGE+x} ]; then
 else
     myMan "${GNUPG_COMMAND}" | \
         ${SED} -n '/^OPTIONS/,/^[[:upper:]]/p' | \
+        head -n-1 | \
         ${SED} -E "s/^(${INDENTATION}--)(${SED_REGEX})($| )(.*)/\1$(printf "${COLOR_RED}%s${COLOR_OFF}" "\2")\3\4/g" | \
         ${SED} -E "s/([^-])(default)([^-])/\1$(printf "${COLOR_YELLOW}%s${COLOR_OFF}" "\2")\3/gi"
 fi
