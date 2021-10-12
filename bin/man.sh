@@ -2,8 +2,6 @@
 
 set -euo pipefail
 
-unset GNUPG_CONFIG_FILE
-
 COLOR_RED='\e[0;1;97;101m'
 COLOR_YELLOW='\e[0;1;30;103m'
 COLOR_OFF='\e[0m'
@@ -33,26 +31,17 @@ myMan() {
     man -P "cat -v" "$1" | ${SED} 's/\(.\)\^H\(.\)/\2/g'
 }
 
-while getopts c:fh opt; do
-    case $opt in
-        c)
-            GNUPG_CONFIG_FILE="${OPTARG}";;
-        h|*)
-            help;;
-   esac
-done
-
-if [ -z ${GNUPG_CONFIG_FILE+x} ]; then
+if [ $# -ne 1 ] || [ -z ${1+x} ]; then
     help
 fi
 
 SED_REGEX="$(
-    grep '^[[:lower:]]' "${GNUPG_CONFIG_FILE}" | \
+    grep '^[[:lower:]]' "$1" | \
         awk '{print $1}' | \
         paste -d '|' -s -
 )"
 # shellcheck disable=SC2001
-GNUPG_COMMAND="$(${SED} 's/\.conf$//' <<<"${GNUPG_CONFIG_FILE##*/}")"
+GNUPG_COMMAND="$(${SED} 's/\.conf$//' <<<"${1##*/}")"
 INDENTATION="$(
     myMan "${GNUPG_COMMAND}" | \
         ${SED} -n "/^OPTIONS/,/^[[:upper:]]/p" | \
