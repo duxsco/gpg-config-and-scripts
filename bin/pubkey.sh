@@ -65,7 +65,7 @@ while getopts dh opt; do
             deleteUntrustedPublicKeys
             exit 0
             ;;
-        h|*)
+        h|?)
             help;;
     esac
 done
