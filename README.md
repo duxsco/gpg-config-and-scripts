@@ -79,3 +79,47 @@ bash bin/pull.sh
 # pull a certain key
 bash bin/pull.sh <KEY ID>
 ```
+
+## SSH support
+
+Launch `gpg-agent` with `ssh` support:
+
+```bash
+echo enable-ssh-support >> ~/.gnupg/gpg-agent.conf
+```
+
+Copy the keygrip from your authentication subkey and add to `~/.gnupg/sshcontrol`:
+
+```bash
+gpg --list-secret-keys --with-keygrip
+```
+
+Add to your `~/.bashrc`:
+
+```bash
+echo 'unset SSH_AGENT_PID
+if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+  export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+fi
+```
+
+Export your `ssh` public key and add to your server's `~/.ssh/authorized_keys`:
+
+```bash
+gpg --export-ssh-key <KEY ID>
+```
+
+I prefer typing in my pin every time:
+
+```bash
+echo 'alias ssh="pidof -q gpg-agent || gpgconf --launch gpg-agent; /usr/bin/ssh"' >> ~/.bashrc
+/bin/fish -c 'alias ssh="pidof -q gpg-agent || gpgconf --launch gpg-agent; /usr/bin/ssh"; funcsave ssh'
+echo "LocalCommand gpgconf --quiet --kill all" >> ~/.ssh/config
+sudo -i bash -c "echo 'PermitLocalCommand yes' >> /etc/ssh/ssh_config"
+```
+
+If that's nothing for you and you want to cache you just need to add to your `~/.bashrc`:
+
+```bash
+echo 'pidof -q gpg-agent || gpgconf --launch gpg-agent' >> ~/.bashrc
+```
