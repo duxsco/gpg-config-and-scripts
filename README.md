@@ -123,3 +123,6 @@ If that's nothing for you and you want to cache you just need to add to your `~/
 ```bash
 echo 'pidof -q gpg-agent || gpgconf --launch gpg-agent' >> ~/.bashrc
 ```
+## Other GnuPG repos
+
+https://github.com/duxco?tab=repositories&q=gpg-
