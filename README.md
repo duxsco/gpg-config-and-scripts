@@ -9,7 +9,7 @@ If you intend to use GnuPG 2.3.x (stable) instead of GnuPG 2.2.x (LTS) make the 
 
 Otherwise, the scripts in `bin/` should work out of the box on common Linux systems.
 
-MacOS, however, needs these [HomeBrew](https://brew.sh) packages installed:
+macOS, however, needs these [HomeBrew](https://brew.sh) packages installed:
 
 - `bash`
 - `findutils`
