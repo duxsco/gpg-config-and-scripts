@@ -125,4 +125,4 @@ echo 'pidof -q gpg-agent || gpgconf --launch gpg-agent' >> ~/.bashrc
 ```
 ## Other GnuPG repos
 
-https://github.com/duxco?tab=repositories&q=gpg-
+https://github.com/duxsco?tab=repositories&q=gpg-
