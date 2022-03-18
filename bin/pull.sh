@@ -44,7 +44,7 @@ fi
 
 gpgconf --homedir "${TEMP_GPG_HOMEDIR}" --kill all
 
-if [ -z ${SUCCESS+x} ] || [[ ${#SUCCESS[@]} -eq 0 ]]; then
+if [[ ${#SUCCESS[@]} -eq 0 ]]; then
     echo -e "\nNo working mechanism found! Aborting...\n"
 else
     echo -e "\nFollowing mechanism(s) are working for public key retrieval.\nWhat do you want to use?\n  0) Abort/Quit"
