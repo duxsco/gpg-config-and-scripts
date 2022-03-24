@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+# Prevent tainting variables via environment
+# See: https://gist.github.com/duxsco/fad211d5828e09d0391f018834f955c9
+unset COLOR COLOR_OFF PUBLIC_KEYS TRUST_LEVEL XARGS
 
 declare -A COLOR
 COLOR["u"]='\e[0;1;97;106m'
@@ -10,7 +12,7 @@ COLOR["q"]='\e[0;1;97;105m'
 COLOR["-|e|n|r|\?"]='\e[0;1;97;101m'
 COLOR_OFF="\e[0m"
 
-if [ "$(uname -s)" == "Darwin" ]; then
+if [[ $(uname -s) == Darwin ]]; then
     XARGS="gxargs"
 else
     XARGS="xargs"
@@ -44,8 +46,6 @@ List public keys:
 Delete ${COLOR["-|e|n|r|\?"]}not trusted${COLOR_OFF} public keys:
   \$ bash ${0##*/} -d
 "
-
-return 1
 }
 
 listPublicKeys() {
@@ -55,7 +55,7 @@ listPublicKeys() {
         ( grep -E "^pub:(${TRUST_LEVEL}):" <<< "${PUBLIC_KEYS}" || true ) | \
             cut -d: -f5 | \
             ${XARGS} --no-run-if-empty gpg --list-options show-unusable-uids,show-sig-expire --list-keys | \
-            sed -E "s/^(uid[[:space:]]*)( \[.*\] )(.*)/\1$(printf "${COLOR[${TRUST_LEVEL}]}%s${COLOR_OFF}" "\2")\3/"
+            sed -E "s/^(uid[[:space:]]*)( \[.*\] )(.*)/\1$(printf "${COLOR[$TRUST_LEVEL]}%s${COLOR_OFF}" "\2")\3/"
     done
 }
 
@@ -65,13 +65,20 @@ while getopts dh opt; do
             deleteUntrustedPublicKeys
             exit 0
             ;;
-        h|?)
-            help;;
+        h)
+            help
+            exit 0
+            ;;
+        ?)
+            help
+            exit 1
+            ;;
     esac
 done
 
-if [ $# -eq 0 ]; then
+if [[ $# -eq 0 ]]; then
     listPublicKeys
 else
     help
+    exit 1
 fi
