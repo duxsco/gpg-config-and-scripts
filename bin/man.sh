@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+# Prevent tainting variables via environment
+# See: https://gist.github.com/duxsco/fad211d5828e09d0391f018834f955c9
+unset COLOR_OFF COLOR_RED COLOR_YELLOW GNUPG_COMMAND INDENTATION SED_REGEX SED
 
 COLOR_RED='\e[0;1;97;101m'
 COLOR_YELLOW='\e[0;1;30;103m'
 COLOR_OFF='\e[0m'
 
-if [ "$(uname -s)" == "Darwin" ]; then
+if [[ $(uname -s) == Darwin ]]; then
     SED="gsed"
 else
     SED="sed"
@@ -22,23 +24,18 @@ Options which have been set in the selected config file
 are highlighted ${COLOR_RED}red${COLOR_OFF}.
 The word \"default\" is highlighted ${COLOR_YELLOW}yellow${COLOR_OFF}.
 "
-
-return 1
 }
 
 myMan() {
     man -P "cat -v" "$1" | ${SED} 's/\(.\)\^H\(.\)/\2/g'
 }
 
-if [ $# -ne 1 ] || [[ -z $1 ]]; then
+if [[ $# -ne 1 ]] || [[ -z $1 ]]; then
     help
+    exit 1
 fi
 
-SED_REGEX="$(
-    grep '^[[:lower:]]' "$1" | \
-        awk '{print $1}' | \
-        paste -d '|' -s -
-)"
+SED_REGEX="$(grep -E -o "^[^#^[:space:]]*" "$1" | paste -d '|' -s -)"
 # shellcheck disable=SC2001
 GNUPG_COMMAND="$(${SED} 's/\.conf$//' <<<"${1##*/}")"
 INDENTATION="$(
