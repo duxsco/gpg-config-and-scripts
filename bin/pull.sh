@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+# Prevent tainting variables via environment
+# See: https://gist.github.com/duxsco/fad211d5828e09d0391f018834f955c9
+unset CHOICE KEYSERVER MECHANISM NUMBER_REGEX PKA SUCCESS TEMP_GPG_HOMEDIR
 
-if [ $# -ne 1 ]; then
+if [[ $# -ne 1 ]]; then
 cat <<EOF
 Please, provide the ID of the key whose public key you want to retrieve.
 Example:
@@ -28,17 +30,15 @@ fi
 # if e-mail...
 if grep -q "@" <<<"$1"; then
     for MECHANISM in "dane" "wkd" ${PKA} "cert" "hkps://keys.openpgp.org" "hkps://keys.mailvelope.com" "hkps://keys.gentoo.org" "hkps://keyserver.ubuntu.com"; do
-        # shellcheck disable=SC2015
-        gpg --homedir "${TEMP_GPG_HOMEDIR}" --auto-key-locate "clear,${MECHANISM}" --locate-external-key "$1" >/dev/null 2>&1 && \
-        SUCCESS+=("${MECHANISM}") || \
-        true
+        if gpg --homedir "${TEMP_GPG_HOMEDIR}" --auto-key-locate "clear,${MECHANISM}" --locate-external-key "$1" >/dev/null 2>&1; then
+            SUCCESS+=("${MECHANISM}")
+        fi
     done
 else
     for KEYSERVER in "hkps://keys.openpgp.org" "hkps://keys.mailvelope.com" "hkps://keys.gentoo.org" "hkps://keyserver.ubuntu.com"; do
-        # shellcheck disable=SC2015
-        gpg --homedir "${TEMP_GPG_HOMEDIR}" --keyserver "${KEYSERVER}" --recv-keys "$1" >/dev/null 2>&1 && \
-        SUCCESS+=("${KEYSERVER}") || \
-        true
+        if gpg --homedir "${TEMP_GPG_HOMEDIR}" --keyserver "${KEYSERVER}" --recv-keys "$1" >/dev/null 2>&1; then
+            SUCCESS+=("${KEYSERVER}")
+        fi
     done
 fi
 
@@ -50,7 +50,7 @@ else
     echo -e "\nFollowing mechanism(s) are working for public key retrieval.\nWhat do you want to use?\n  0) Abort/Quit"
 
     for INDEX in "${!SUCCESS[@]}"; do
-        echo "  $((INDEX+1))) ${SUCCESS[${INDEX}]}"
+        echo "  $((INDEX+1))) ${SUCCESS[$INDEX]}"
     done
 
     echo ""
@@ -68,12 +68,12 @@ else
         echo -e "Public key retrieval aborted!\n"
     else
         ((CHOICE--))
-        echo -e "Mechanism \"${SUCCESS[${CHOICE}]}\" chosen...\n"
+        echo -e "Mechanism \"${SUCCESS[$CHOICE]}\" chosen...\n"
 
         if grep -q "@" <<<"$1"; then
-            gpg --auto-key-locate "clear,${SUCCESS[${CHOICE}]}" --locate-external-key "$1"
+            gpg --auto-key-locate "clear,${SUCCESS[$CHOICE]}" --locate-external-key "$1"
         else
-            gpg --keyserver "${SUCCESS[${CHOICE}]}" --recv-keys "$1"
+            gpg --keyserver "${SUCCESS[$CHOICE]}" --recv-keys "$1"
         fi
     fi
 fi
