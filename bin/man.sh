@@ -14,7 +14,7 @@ else
     SED="sed"
 fi
 
-help() {
+function help() {
     echo -e "
 Execute:
   $ bash ${0##*/} /path/to/gnupg/config/file.conf
@@ -26,7 +26,7 @@ The word \"default\" is highlighted ${COLOR_YELLOW}yellow${COLOR_OFF}.
 "
 }
 
-myMan() {
+function myMan() {
     man -P "cat -v" "$1" | ${SED} 's/\(.\)\^H\(.\)/\2/g'
 }
 

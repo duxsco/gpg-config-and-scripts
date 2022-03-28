@@ -18,14 +18,14 @@ else
     XARGS="xargs"
 fi
 
-deleteUntrustedPublicKeys() {
+function deleteUntrustedPublicKeys() {
     gpg --list-keys --with-colons | \
         grep -E "^pub:(-|e|n|r|\?)" | \
         cut -d: -f5 | \
         ${XARGS} --no-run-if-empty gpg --delete-keys
 }
 
-help() {
+function help() {
     echo -e "
 Not trusted public keys are highlighted in ${COLOR["-|e|n|r|\?"]}red${COLOR_OFF} at the bottom of the public key list:
   - ${COLOR["-|e|n|r|\?"]}\"unknown\"${COLOR_OFF}
@@ -48,7 +48,7 @@ Delete ${COLOR["-|e|n|r|\?"]}not trusted${COLOR_OFF} public keys:
 "
 }
 
-listPublicKeys() {
+function listPublicKeys() {
     PUBLIC_KEYS="$(gpg --list-keys --with-colons | grep "^pub:")"
 
     for TRUST_LEVEL in "u" "f" "m" "q" "-|e|n|r|\?"; do
