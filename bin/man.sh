@@ -2,16 +2,16 @@
 
 # Prevent tainting variables via environment
 # See: https://gist.github.com/duxsco/fad211d5828e09d0391f018834f955c9
-unset COLOR_OFF COLOR_RED COLOR_YELLOW GNUPG_COMMAND INDENTATION SED SED_REGEX
+unset color_off color_red color_yellow gnupg_command indentation sed sed_regex
 
-COLOR_RED='\e[0;1;97;101m'
-COLOR_YELLOW='\e[0;1;30;103m'
-COLOR_OFF='\e[0m'
+color_red='\e[0;1;97;101m'
+color_yellow='\e[0;1;30;103m'
+color_off='\e[0m'
 
 if [[ $(uname -s) == Darwin ]]; then
-    SED="gsed"
+    sed="gsed"
 else
-    SED="sed"
+    sed="sed"
 fi
 
 function help() {
@@ -21,13 +21,13 @@ Execute:
 
 The complete \"OPTIONS\" section of the manpage is printed out.
 Options which have been set in the selected config file
-are highlighted ${COLOR_RED}red${COLOR_OFF}.
-The word \"default\" is highlighted ${COLOR_YELLOW}yellow${COLOR_OFF}.
+are highlighted ${color_red}red${color_off}.
+The word \"default\" is highlighted ${color_yellow}yellow${color_off}.
 "
 }
 
 function myMan() {
-    man -P "cat -v" "$1" | ${SED} 's/\(.\)\^H\(.\)/\2/g'
+    man -P "cat -v" "$1" | ${sed} 's/\(.\)\^H\(.\)/\2/g'
 }
 
 if [[ $# -ne 1 ]] || [[ -z $1 ]]; then
@@ -35,19 +35,19 @@ if [[ $# -ne 1 ]] || [[ -z $1 ]]; then
     exit 1
 fi
 
-SED_REGEX="$(grep -E -o "^[^#^[:space:]]*" "$1" | paste -d '|' -s -)"
+sed_regex="$(grep -E -o "^[^#^[:space:]]*" "$1" | paste -d '|' -s -)"
 # shellcheck disable=SC2001
-GNUPG_COMMAND="$(${SED} 's/\.conf$//' <<<"${1##*/}")"
-INDENTATION="$(
-    myMan "${GNUPG_COMMAND}" | \
-        ${SED} -n "/^OPTIONS/,/^[[:upper:]]/p" | \
+gnupg_command="$(${sed} 's/\.conf$//' <<<"${1##*/}")"
+indentation="$(
+    myMan "${gnupg_command}" | \
+        ${sed} -n "/^OPTIONS/,/^[[:upper:]]/p" | \
         grep "^[[:space:]]*--" | \
         sort | tail -n 1 | \
         awk -F"--" '{print $1}'
 )"
 
-myMan "${GNUPG_COMMAND}" | \
-    ${SED} -n '/^OPTIONS/,/^[[:upper:]]/p' | \
+myMan "${gnupg_command}" | \
+    ${sed} -n '/^OPTIONS/,/^[[:upper:]]/p' | \
     head -n-1 | \
-    ${SED} -E "s/^(${INDENTATION}--)(${SED_REGEX})($| )(.*)/\1$(printf "${COLOR_RED}%s${COLOR_OFF}" "\2")\3\4/g" | \
-    ${SED} -E "s/([^-])(default)([^-])/\1$(printf "${COLOR_YELLOW}%s${COLOR_OFF}" "\2")\3/gi"
+    ${sed} -E "s/^(${indentation}--)(${sed_regex})($| )(.*)/\1$(printf "${color_red}%s${color_off}" "\2")\3\4/g" | \
+    ${sed} -E "s/([^-])(default)([^-])/\1$(printf "${color_yellow}%s${color_off}" "\2")\3/gi"

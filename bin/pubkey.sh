@@ -2,60 +2,60 @@
 
 # Prevent tainting variables via environment
 # See: https://gist.github.com/duxsco/fad211d5828e09d0391f018834f955c9
-unset COLOR COLOR_OFF PUBLIC_KEYS TRUST_LEVEL XARGS
+unset color color_off public_keys trust_level xargs
 
-declare -A COLOR
-COLOR["u"]='\e[0;1;97;106m'
-COLOR["f"]='\e[0;1;97;104m'
-COLOR["m"]='\e[0;1;30;103m'
-COLOR["q"]='\e[0;1;97;105m'
-COLOR["-|e|n|r|\?"]='\e[0;1;97;101m'
-COLOR_OFF="\e[0m"
+declare -A color
+color["u"]='\e[0;1;97;106m'
+color["f"]='\e[0;1;97;104m'
+color["m"]='\e[0;1;30;103m'
+color["q"]='\e[0;1;97;105m'
+color["-|e|n|r|\?"]='\e[0;1;97;101m'
+color_off="\e[0m"
 
 if [[ $(uname -s) == Darwin ]]; then
-    XARGS="gxargs"
+    xargs="gxargs"
 else
-    XARGS="xargs"
+    xargs="xargs"
 fi
 
 function deleteUntrustedPublicKeys() {
     gpg --list-keys --with-colons | \
         grep -E "^pub:(-|e|n|r|\?)" | \
         cut -d: -f5 | \
-        ${XARGS} --no-run-if-empty gpg --delete-keys
+        ${xargs} --no-run-if-empty gpg --delete-keys
 }
 
 function help() {
     echo -e "
-Not trusted public keys are highlighted in ${COLOR["-|e|n|r|\?"]}red${COLOR_OFF} at the bottom of the public key list:
-  - ${COLOR["-|e|n|r|\?"]}\"unknown\"${COLOR_OFF}
-  - ${COLOR["-|e|n|r|\?"]}\"expired\"${COLOR_OFF}
-  - ${COLOR["-|e|n|r|\?"]}\"never trust\"${COLOR_OFF}
-  - ${COLOR["-|e|n|r|\?"]}\"revoked\"${COLOR_OFF}
-  - ${COLOR["-|e|n|r|\?"]}\"error\"${COLOR_OFF}
+Not trusted public keys are highlighted in ${color["-|e|n|r|\?"]}red${color_off} at the bottom of the public key list:
+  - ${color["-|e|n|r|\?"]}\"unknown\"${color_off}
+  - ${color["-|e|n|r|\?"]}\"expired\"${color_off}
+  - ${color["-|e|n|r|\?"]}\"never trust\"${color_off}
+  - ${color["-|e|n|r|\?"]}\"revoked\"${color_off}
+  - ${color["-|e|n|r|\?"]}\"error\"${color_off}
 
 Every other public key:
-  - ${COLOR["u"]}\"ultimate\"${COLOR_OFF}
-  - ${COLOR["f"]}\"full\"${COLOR_OFF}
-  - ${COLOR["m"]}\"marginal\"${COLOR_OFF}
-  - ${COLOR["q"]}\"undefined\"${COLOR_OFF}
+  - ${color["u"]}\"ultimate\"${color_off}
+  - ${color["f"]}\"full\"${color_off}
+  - ${color["m"]}\"marginal\"${color_off}
+  - ${color["q"]}\"undefined\"${color_off}
 
 List public keys:
   \$ bash ${0##*/}
 
-Delete ${COLOR["-|e|n|r|\?"]}not trusted${COLOR_OFF} public keys:
+Delete ${color["-|e|n|r|\?"]}not trusted${color_off} public keys:
   \$ bash ${0##*/} -d
 "
 }
 
 function listPublicKeys() {
-    PUBLIC_KEYS="$(gpg --list-keys --with-colons | grep "^pub:")"
+    public_keys="$(gpg --list-keys --with-colons | grep "^pub:")"
 
-    for TRUST_LEVEL in "u" "f" "m" "q" "-|e|n|r|\?"; do
-        ( grep -E "^pub:(${TRUST_LEVEL}):" <<< "${PUBLIC_KEYS}" || true ) | \
+    for trust_level in "u" "f" "m" "q" "-|e|n|r|\?"; do
+        ( grep -E "^pub:(${trust_level}):" <<< "${public_keys}" || true ) | \
             cut -d: -f5 | \
-            ${XARGS} --no-run-if-empty gpg --list-options show-unusable-uids,show-sig-expire --list-keys | \
-            sed -E "s/^(uid[[:space:]]*)( \[.*\] )(.*)/\1$(printf "${COLOR[$TRUST_LEVEL]}%s${COLOR_OFF}" "\2")\3/"
+            ${xargs} --no-run-if-empty gpg --list-options show-unusable-uids,show-sig-expire --list-keys | \
+            sed -E "s/^(uid[[:space:]]*)( \[.*\] )(.*)/\1$(printf "${color[$trust_level]}%s${color_off}" "\2")\3/"
     done
 }
 
