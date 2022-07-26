@@ -107,20 +107,13 @@ Export your `ssh` public key and add to your server's `~/.ssh/authorized_keys`:
 gpg --export-ssh-key <KEY ID>
 ```
 
-I prefer typing in my pin every time:
+I prefer typing in my pin for my [GnuPG smartcard](https://github.com/duxsco/gpg-smartcard) every time:
 
 ```bash
-echo 'alias ssh="pidof -q gpg-agent || gpgconf --launch gpg-agent; /usr/bin/ssh"' >> ~/.bashrc
-/bin/fish -c 'alias ssh="pidof -q gpg-agent || gpgconf --launch gpg-agent; /usr/bin/ssh"; funcsave ssh'
-echo "LocalCommand gpgconf --quiet --kill all" >> ~/.ssh/config
+echo "LocalCommand gpgconf --reload scdaemon" >> ~/.ssh/config
 sudo -i bash -c "echo 'PermitLocalCommand yes' >> /etc/ssh/ssh_config"
 ```
 
-If that's nothing for you and you want to cache you just need to add to your `~/.bashrc`:
-
-```bash
-echo 'pidof -q gpg-agent || gpgconf --launch gpg-agent' >> ~/.bashrc
-```
 ## Other GnuPG repos
 
 https://github.com/duxsco?tab=repositories&q=gpg-
