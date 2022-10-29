@@ -2,21 +2,16 @@
 
 ## System requirements
 
-If you intend to use GnuPG 2.3.x (stable) instead of GnuPG 2.2.x (LTS) make the following changes in `gpg.conf`:
+This repo assumes you using GnuPG 2.3.x (stable).
 
-- Remove obsolete `no-honor-pka-record` from `keyserver-options`
-- Uncomment the line containing `force-aead`
-
-Otherwise, the scripts in `bin/` should work out of the box on common Linux systems.
-
-macOS, however, needs these [HomeBrew](https://brew.sh) packages installed:
+macOS needs these [HomeBrew](https://brew.sh) packages to be installed:
 
 - `bash`
 - `findutils`
-- `gnupg` or `gnupg@2.2`
+- `gnupg`
 - `gnu-sed`
 
-You need to comment out `default-key` in `gpg.conf` OR set the ID of one of your secret keys. To print personal key IDs in `long` format:
+You need to comment out `default-key` as well as `encrypt-to` in `gpg.conf` OR set the ID of one of your secret keys. To print full-length personal key IDs:
 
 ```bash
 gpg --list-options show-only-fpr-mbox --list-secret-keys
