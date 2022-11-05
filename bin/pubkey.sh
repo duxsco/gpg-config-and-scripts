@@ -10,6 +10,7 @@ color["f"]='\e[0;1;97;104m'
 color["m"]='\e[0;1;30;103m'
 color["q"]='\e[0;1;97;105m'
 color["-|e|n|r|\?"]='\e[0;1;97;101m'
+color_expired='\e[0;1;97;101m'
 color_off="\e[0m"
 
 if [[ $(uname -s) == Darwin ]]; then
@@ -52,9 +53,11 @@ function listPublicKeys() {
     public_keys="$(gpg --list-keys --with-colons | grep "^pub:")"
 
     for trust_level in "u" "f" "m" "q" "-|e|n|r|\?"; do
+        # shellcheck disable=SC2059
         ( grep -E "^pub:(${trust_level}):" <<< "${public_keys}" || true ) | \
             cut -d: -f5 | \
-            ${xargs} --no-run-if-empty gpg --list-options show-unusable-uids,show-sig-expire --list-keys | \
+            ${xargs} --no-run-if-empty gpg --list-options show-unusable-uids,show-unusable-subkeys,show-sig-expire --list-keys | \
+            sed -E "s/expired/$(printf "${color_expired}expired${color_off}")/" | \
             sed -E "s/^(uid[[:space:]]*)( \[.*\] )(.*)/\1$(printf "${color[$trust_level]}%s${color_off}" "\2")\3/"
     done
 }
