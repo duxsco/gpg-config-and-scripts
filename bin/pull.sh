@@ -29,7 +29,7 @@ fi
 
 # if e-mail...
 if grep -q "@" <<<"$1"; then
-    for mechanism in "dane" "wkd" ${pka} "cert" "hkps://keys.openpgp.org" "hkps://keys.mailvelope.com" "hkps://keys.gentoo.org" "hkps://keyserver.ubuntu.com"; do
+    for mechanism in "dane" "wkd" ${pka} "cert" "hkps://keys.openpgp.org" "hkps://keys.mailvelope.com" "hkps://keys.gentoo.org" "hkps://keyring.debian.org" "hkps://keyserver.ubuntu.com"; do
         if gpg --homedir "${temp_gpg_homedir}" --auto-key-locate "clear,${mechanism}" --locate-external-key "$1" >/dev/null 2>&1; then
             success+=("${mechanism}")
         fi
