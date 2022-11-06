@@ -11,7 +11,7 @@ macOS needs these [HomeBrew](https://brew.sh) packages to be installed:
 - `gnupg`
 - `gnu-sed`
 
-You need to comment out `default-key` as well as `encrypt-to` in `gpg.conf` OR set the ID of one of your secret keys. To print full-length personal key IDs:
+You need to comment out `default-key` as well as `encrypt-to` in `gpg.conf` OR set the ID of one of your secret keys. The same applies to `sender` where you have to provide your UID's e-mail address or comment the option out altogether. To print full-length personal key IDs and e-mail addresses:
 
 ```bash
 gpg --list-options show-only-fpr-mbox --list-secret-keys
