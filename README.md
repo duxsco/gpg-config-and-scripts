@@ -1,5 +1,7 @@
 # My GnuPG configuration and some helper scripts
 
+> ⚠️ If you want to create a new keypair, you cann follow the section [Create a GnuPG keypair](https://github.com/duxsco/gpg-smartcard#create-a-gnupg-keypair). ⚠️
+
 ## System requirements
 
 This repo assumes you using GnuPG 2.3.x (stable).
