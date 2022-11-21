@@ -95,7 +95,8 @@ Add to your `~/.bashrc`:
 
 ```bash
 unset SSH_AGENT_PID
-export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+export SSH_AUTH_SOCK
 ```
 
 Export your `ssh` public key and add to your server's `~/.ssh/authorized_keys`:
