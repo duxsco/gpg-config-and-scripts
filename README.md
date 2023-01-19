@@ -1,5 +1,7 @@
 # My GnuPG configuration and some helper scripts
 
+> ️⚠️ You can find information on my GnuPG public key in my [GitHub profile README](https://github.com/duxsco/)! ⚠️
+
 > ⚠️ If you want to create a new keypair, you cann follow the section [Create a GnuPG keypair](https://github.com/duxsco/gpg-smartcard#create-a-gnupg-keypair). ⚠️
 
 ## System requirements
