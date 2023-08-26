@@ -1,6 +1,17 @@
 # My GnuPG configuration and some helper scripts
 
-> ️⚠️ You can find information on my GnuPG public key in my [GitHub profile README](https://github.com/duxsco/)! ⚠️
+```
+  __________________________________________________
+/ This repo has been archived!                       \
+| Its successor is at:                               |
+\ https://codeberg.org/duxsco/gpg-config-and-scripts /
+  --------------------------------------------------
+         \   ^__^
+          \  (oo)\_______
+             (__)\       )\/\
+                 ||----w |
+                 ||     ||
+```
 
 > ⚠️ If you want to create a new keypair, you cann follow the section [Create a GnuPG keypair](https://github.com/duxsco/gpg-smartcard#create-a-gnupg-keypair). ⚠️
 
